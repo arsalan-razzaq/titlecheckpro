@@ -1,0 +1,2 @@
+import { Button } from "@/components/ui";
+export default function NotFound() { return <section className="section min-h-[65vh] bg-[#111] text-center text-white"><div className="container"><p className="font-heading text-8xl font-black text-[#FFC400]">404</p><h1 className="mt-5 font-heading text-4xl font-black">That page took a wrong turn.</h1><p className="mx-auto mt-4 max-w-xl text-white/60">The route may have moved, or the selected country or package is not valid.</p><Button href="/" className="mt-8">Back to Home</Button></div></section>; }

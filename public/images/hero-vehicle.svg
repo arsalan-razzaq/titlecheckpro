@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Stylized premium vehicle in a dark studio</title>
+  <desc id="desc">Original placeholder illustration for the TitleCheckPro hero section.</desc>
+  <rect width="1600" height="900" fill="#111"/>
+  <path d="M0 650h1600v250H0z" fill="#090909"/>
+  <path d="M970 320c130 0 224 54 330 175l120 42c49 17 80 62 80 113v70H650v-65c0-65 42-122 104-142l96-31 120-162Z" fill="#242424"/>
+  <path d="M1008 355h-21l-90 126h348c-73-82-135-126-237-126Z" fill="#111"/>
+  <path d="M670 594h800" stroke="#FFC400" stroke-width="10" stroke-linecap="round" opacity=".8"/>
+  <circle cx="850" cy="700" r="85" fill="#0b0b0b" stroke="#3d3d3d" stroke-width="20"/>
+  <circle cx="1320" cy="700" r="85" fill="#0b0b0b" stroke="#3d3d3d" stroke-width="20"/>
+  <path d="M1460 570h55v38h-55z" fill="#FFC400"/>
+  <path d="M85 185h560" stroke="#FFC400" stroke-width="2" opacity=".22"/>
+  <path d="M85 215h430" stroke="#fff" stroke-width="1" opacity=".12"/>
+  <text x="85" y="785" fill="#8B8B8B" font-family="Arial, sans-serif" font-size="22">ORIGINAL PLACEHOLDER — REPLACE WITH LICENSED FINAL PHOTOGRAPHY IF DESIRED</text>
+</svg>

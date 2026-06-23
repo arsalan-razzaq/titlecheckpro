@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+:root { --yellow: #FFC400; --black: #090909; --dark: #111111; --charcoal: #222222; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: #fff; color: #111; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; overflow-x: hidden; }
+.font-heading { font-family: Barlow, "Arial Narrow", "Segoe UI", Arial, sans-serif; }
+.container { width: min(1180px, calc(100% - 32px)); margin-inline: auto; }
+.section { padding-block: clamp(4rem, 7vw, 6.5rem); }
+.hero-grid { background-image: linear-gradient(rgba(9,9,9,.78), rgba(9,9,9,.92)), url("/images/hero-vehicle.svg"); background-size: cover; background-position: center; }
+.dot-grid { background-image: radial-gradient(rgba(255,196,0,.18) 1px, transparent 1px); background-size: 22px 22px; }
+::selection { background: #FFC400; color: #090909; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
