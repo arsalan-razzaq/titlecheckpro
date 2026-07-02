@@ -6,19 +6,19 @@ export const regions = {
 
 export const countries = {
   australia: {
-    name: "Australia", shortName: "AU", currency: "AUD", symbol: "A$", flag: "🇦🇺",
+    name: "Australia", shortName: "AU", currency: "USD", symbol: "$", flag: "🇦🇺",
     vinLabel: "VIN or Chassis Number", plateLabel: "Registration Number", regionLabel: "State or Territory",
-    plans: { basic: null, standard: null, premium: null },
+    plans: { basic: 49, standard: 95, premium: 130 },
   },
   canada: {
-    name: "Canada", shortName: "CA", currency: "CAD", symbol: "C$", flag: "🇨🇦",
+    name: "Canada", shortName: "CA", currency: "USD", symbol: "$", flag: "🇨🇦",
     vinLabel: "VIN", plateLabel: "Licence Plate", regionLabel: "Province or Territory",
-    plans: { basic: null, standard: null, premium: null },
+    plans: { basic: 49, standard: 95, premium: 130 },
   },
   usa: {
     name: "United States", shortName: "US", currency: "USD", symbol: "$", flag: "🇺🇸",
     vinLabel: "VIN", plateLabel: "License Plate", regionLabel: "State",
-    plans: { basic: null, standard: null, premium: null },
+    plans: { basic: 49, standard: 95, premium: 130 },
   },
 } as const;
 

@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Facebook, Instagram, Linkedin, Mail } from "lucide-react";
-import { countries } from "@/data/countries";
 import { navigation } from "@/data/navigation";
 import { siteConfig } from "@/data/site";
 
@@ -16,7 +15,7 @@ export function Footer() {
         </div>
       </div>
       <div><h3 className="font-heading text-lg font-black text-[#FFC400]">Quick links</h3><ul className="mt-4 space-y-2 text-sm text-white/65">{navigation.slice(0, 5).map((item) => <li key={item.href}><Link className="hover:text-white" href={item.href}>{item.label}</Link></li>)}</ul></div>
-      <div><h3 className="font-heading text-lg font-black text-[#FFC400]">Supported countries</h3><ul className="mt-4 space-y-2 text-sm text-white/65">{Object.entries(countries).map(([key, country]) => <li key={key}><Link className="hover:text-white" href={`/${key}`}>{country.flag} {country.name}</Link></li>)}</ul></div>
+      <div><h3 className="font-heading text-lg font-black text-[#FFC400]">Location Based</h3><p className="mt-4 text-sm leading-6 text-white/65">Your report country is selected automatically. Other countries continue with USD checkout.</p><Link className="mt-4 inline-flex text-sm font-bold text-[#FFC400] hover:text-white" href="/pricing">View detected pricing</Link></div>
       <div><h3 className="font-heading text-lg font-black text-[#FFC400]">Contact</h3><a className="mt-4 flex items-center gap-2 text-sm text-white/70 hover:text-white" href={`mailto:${siteConfig.email}`}><Mail className="size-4 text-[#FFC400]" />{siteConfig.email}</a><p className="mt-3 text-sm text-white/50">{siteConfig.availability}</p></div>
     </div>
     <div className="border-t border-white/10">

@@ -31,3 +31,4 @@ export const reportSchema = z.object({
 
 export type ContactInput = z.input<typeof contactSchema>;
 export type ReportInput = z.input<typeof reportSchema>;
+export type ReportData = z.output<typeof reportSchema>;

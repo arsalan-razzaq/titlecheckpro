@@ -1,17 +1,19 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { countries, CountryKey, regions } from "@/data/countries";
 import { plans, PlanKey } from "@/data/plans";
+import { formatPrice, requestReference } from "@/lib/utils";
 import { ReportInput, reportSchema } from "@/lib/validation";
 import { Button, Field, inputClass, LoadingSpinner } from "./ui";
 
-export function ReportRequestForm({ countryKey, defaultPlan, redirectOnSuccess = false }: { countryKey: CountryKey; defaultPlan?: PlanKey; redirectOnSuccess?: boolean }) {
+const lastOrderStorageKey = "titlecheckpro:last-order";
+const ordersStorageKey = "titlecheckpro:orders";
+
+export function ReportRequestForm({ countryKey, defaultPlan }: { countryKey: CountryKey; defaultPlan?: PlanKey; redirectOnSuccess?: boolean }) {
   const country = countries[countryKey];
-  const router = useRouter();
   const [message, setMessage] = useState("");
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ReportInput>({
     resolver: zodResolver(reportSchema),
@@ -19,13 +21,52 @@ export function ReportRequestForm({ countryKey, defaultPlan, redirectOnSuccess =
   });
   const submit = async (values: ReportInput) => {
     setMessage("");
+    const selectedPlan = plans[values.plan];
+    const amount = country.plans[values.plan];
+    let reference = requestReference();
+    let delivery = "local";
+
+    setMessage("Saving request and opening secure checkout...");
+
     try {
       const response = await fetch("/api/report-request", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(values) });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.message || "Unable to submit your request");
-      if (redirectOnSuccess) router.push(`/order/success?ref=${encodeURIComponent(result.reference)}&delivery=${result.delivery}`);
-      else setMessage(`Request received. Reference: ${result.reference}${result.delivery === "development-log" ? " (development email logging only)" : ""}`);
-    } catch (error) { setMessage(error instanceof Error ? error.message : "Unable to submit your request"); }
+      const result = await response.json().catch(() => ({}));
+      if (response.ok && result.reference) {
+        reference = result.reference;
+        delivery = result.delivery || "saved";
+      }
+    } catch (error) {
+      console.warn("[report-request]", error);
+    }
+
+    try {
+      const order = {
+        reference,
+        country: country.name,
+        countryKey: values.country,
+        plan: selectedPlan.name,
+        planKey: values.plan,
+        amount,
+        currency: country.currency,
+        price: formatPrice(amount, country.symbol, country.currency),
+        email: values.email,
+        vin: values.vin,
+        vehicle: `${values.year} ${values.make} ${values.model}`,
+        delivery,
+        status: "checkout_opened",
+        createdAt: new Date().toISOString(),
+      };
+      sessionStorage.setItem(lastOrderStorageKey, JSON.stringify(order));
+      const orders = JSON.parse(localStorage.getItem(ordersStorageKey) || "[]") as Array<typeof order>;
+      localStorage.setItem(ordersStorageKey, JSON.stringify([order, ...orders.filter((item) => item.reference !== reference)].slice(0, 25)));
+    } catch (error) {
+      console.warn("[order-storage]", error);
+    }
+
+    const checkoutUrl = new URL(selectedPlan.stripePaymentLink);
+    checkoutUrl.searchParams.set("prefilled_email", values.email);
+    checkoutUrl.searchParams.set("client_reference_id", reference);
+    window.location.assign(checkoutUrl.toString());
   };
   return <form onSubmit={handleSubmit(submit)} className="grid gap-5" noValidate>
     <input type="text" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" {...register("website")} />
@@ -46,8 +87,8 @@ export function ReportRequestForm({ countryKey, defaultPlan, redirectOnSuccess =
     <Field label="Additional Notes" error={errors.notes?.message}><textarea rows={4} className={inputClass} {...register("notes")} /></Field>
     <label className="flex items-start gap-3 text-sm text-[#555]"><input type="checkbox" className="mt-1 size-4 accent-[#FFC400]" {...register("terms")} /><span>I agree to the Terms & Conditions, Privacy Policy and Refund & Dispute Policy.</span></label>
     {errors.terms && <p className="text-xs text-red-700">{errors.terms.message}</p>}
-    <p className="rounded-lg bg-[#FFF8D8] p-4 text-sm text-[#604b00]">Secure request submission. Payment integration is pending; this form creates an order enquiry only.</p>
-    <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">{isSubmitting && <LoadingSpinner />}{isSubmitting ? "Submitting…" : "Submit Report Request"}</Button>
+    <p className="rounded-lg bg-[#FFF8D8] p-4 text-sm text-[#604b00]">Secure checkout is handled by Stripe. Your selected package opens the matching payment page.</p>
+    <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">{isSubmitting && <LoadingSpinner />}{isSubmitting ? "Opening Stripe..." : "Proceed to Secure Checkout"}</Button>
     <p aria-live="polite" className="text-sm font-semibold text-[#555]">{message}</p>
   </form>;
 }
